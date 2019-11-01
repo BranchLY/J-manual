@@ -1,0 +1,59 @@
+Main{
+   // 日志文件名称.
+   log_file_name = "exercise-jaumin_2d.log"
+   log_all_nodes    = FALSE
+   
+   // 可视化数据场的输出参数.
+   javis_dump_interval         = 1			// 输出时间步的间隔. 0表示关闭.
+   javis_dump_dirname          = "javis_d"		// 存储数据场的目录名.
+   javis_number_procs_per_file = 1			// 多少个进程共享一个输出文件.
+
+}
+
+TimerManager{
+  timer_list   = "*::*::*"
+  print_summed = TRUE
+  print_max    = TRUE
+}
+
+GridTopology {
+}
+
+GridGeometry {
+  MeshImportationParameter{
+    //file_name    = "../mesh-2d-10.k"
+    file_name    = "../input/mesh-2d-20000.k"
+    refine_times = 0
+  }
+}
+
+// 用户自定义的子数据库，通过PatchStrategy的构造函数读入，作为成员数据
+// 注：自定义数据库中的参数可以理解为宏定义（不改动程序情况下修改）
+Possion {
+   
+}
+
+Solver {
+    solver_lib      = "JPSOL"
+    solver_name     = "AMG_CG"
+    residual_tol    = 1.0e-18
+    max_iter        = 200
+    print_iter_info = 2 
+    Matrix{
+      Matrix_Type = "VBL"
+    }
+}
+
+
+HierarchyTimeIntegrator{
+  // 时间控制参数
+  start_time           = 0.e0 // 模拟的初始时刻.
+  end_time             = 2.0  // 模拟的终止时刻.
+  max_integrator_steps = 2    // 模拟的最大时间步数.
+  max_dt               = 1.0  // 最大时间步步长.
+  grow_dt              = 1.2  // 连续两个时间步长的最大放大倍数.
+
+  GriddingAlgorithm{
+    patch_size = 2000 // 网格片大小.
+  }
+}
